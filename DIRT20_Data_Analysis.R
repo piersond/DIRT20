@@ -12,10 +12,10 @@ library(dplyr)
 
 ### SETUP ###
 #Set path to data folder
-setwd("C:/Users/Derek/Google Drive/OSU - PhD/Projects/DIRT/DIRT 2017 Soil Cores/_Master_Files_DIRT20/Analysis/DIRT20_pub_data_analysis/")
+#setwd("C:/Users/Derek/Google Drive/OSU - PhD/Projects/DIRT/DIRT 2017 Soil Cores/_Master_Files_DIRT20/Analysis/DIRT20_pub_data_analysis/")
 
 #Load raw data csv
-data.raw <- read.csv("DIRT20_master_raw.csv", as.is=T)
+data.raw <- read.csv("DIRT20_soil_master_raw.csv", as.is=T)
 colnames(data.raw) <- as.character(data.raw[1,1:16])
 data.raw <- data.raw[-1,]
 
@@ -33,9 +33,8 @@ str(data.raw)
   data.raw[14,6] <- 3.66
 
 ### Plot C by trt & depth
-ggplot(data.raw, aes(x=TRT, y=bulk_percC, color=Depth)) + 
-  geom_boxplot(data=data.raw, aes(fill=Depth)) + 
+ggplot(data.raw, aes(x=TRT, y=bulk_percC, color=Depth)) +
+  geom_boxplot(data=data.raw, aes(fill=Depth)) +
   geom_jitter(data=data.raw, aes(size=2), width=0.05, height=0.1) +
   scale_color_brewer(palette="Set1") +
   scale_fill_brewer(palette="Set1")
-

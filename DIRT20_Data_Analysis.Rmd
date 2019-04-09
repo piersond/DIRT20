@@ -26,7 +26,7 @@ library(tidyverse)
 library(knitr)
 ```
 
-#*NEXT STEPS*
+# *NEXT STEPS*
 - Convert boxplots to bar graphs with std error bars. (reqs summary stats)
 - Analyze bulk soil C over time
 - Analyze bulk density dataset
@@ -37,13 +37,25 @@ library(knitr)
 **Add interpretations/hypotheses in captions below figures** 
 
 
-#H.J. Andrews DIRT - 20 Year Analysis
+# H.J. Andrews DIRT - 20 Year Analysis
 This document contains the R analysis and figures for the H.J. Andrews DIRT 20 year sampling event. Sampling was done in June-July 2017. 
 \  
 
-##Datasets
+## Rough Outline For The Paper
+This paper addresses the question: How do detrital source, quantity and quality influence soil C stabilization? (in this case, specific to andic soils in a wet temperate forest dominated by old-growth Douglas fir). The experiment used to answer our research question is the DIRT manipulation at H.J. Andrews. After twenty years of DIRT manipulations, we now present results from the experiment pertaining to the following soil properties:
+- Bulk soil C% at 0-10, 10-20, 20-40, 40-60 & 60-100 cm, across treatments (Figure 1)
+- Bulk density at 0-5, 5-10 & 10-15 cm (Figure 2)
+- Bulk soil C as stocks (Figure 3)
+- Soil C fractions (heavy, intermediate and light) at depths 0-10 & 10-20 cm (Figure 4)
+- If most relevant to this paper, also FTICR MS of bulk soil C (Figure 5)
+- If insightful, change in bulk soil C at 0-10 cm at year 10, 15 and 20.
+- If insightful, bulk soil N by depth
+- Other soil properties measured: pH, N-mineralization rate (Table), root weight, monthly soil temperature
+\
 
-####Dataset 1: Bulk and fractionated soil C and N concentration by plot and depth.
+## Datasets
+
+#### Dataset 1: Bulk and fractionated soil C and N concentration by plot and depth.
 ```{r}
 data.1 <- read.csv("DIRT20_soil_master_raw.csv", as.is=T, skip=1)  #Load data as data.1
 kable(data.1[1:8,], caption = "Data table structure")  #Display first few rows of the table
@@ -51,7 +63,7 @@ kable(data.1[1:8,], caption = "Data table structure")  #Display first few rows o
 
 \  
 
-####Dataset 2: Bulk soil C over time, years 10, 15 and 20
+#### Dataset 2: Bulk soil C over time, years 10, 15 and 20
 <style>
 div.green { background-color:	#e6fff6; border-radius: 5px; padding: 10px;}
 </style>
@@ -63,20 +75,20 @@ div.green { background-color:	#e6fff6; border-radius: 5px; padding: 10px;}
 
 \  
 
-####Dataset 3: Bulk density and soil C and N by plot, in 5 cm increments from 0-15 cm 
+#### Dataset 3: Bulk density and soil C and N by plot, in 5 cm increments from 0-15 cm 
 <div class = "green">
 **To be continued...**
 </div>
 
 \  
 
-##Bulk soil C 
+## Bulk soil C 
 
 ```{r fig.width=8, fig.height=6, fig.cap=""}
 ### Plot soil  percent C by treatment & depth
 ggplot(data.1, aes(x=TRT, y=bulk_percC, color=Depth)) + 
   geom_boxplot(data=data.1, aes(color=Depth)) + 
-  #geom_jitter(data=data.1, aes(size=0.5), width=0.05, height=0.1) +
+  # geom_jitter(data=data.1, aes(size=0.5), width=0.05, height=0.1) +
   scale_color_brewer(palette="Set1") +
   scale_fill_brewer(palette="Set1") +
   ggtitle("HJA DIRT20: Bulk Soil C by Treatment & Depth") +
@@ -84,7 +96,7 @@ ggplot(data.1, aes(x=TRT, y=bulk_percC, color=Depth)) +
   theme(text = element_text(size=14))
 ```
 
-###Modified C content for 0-10 cm 
+### Modified C content for 0-10 cm 
 Interpretation of the treatment effects is largely affected by the mean soil C value from the control plots. From the primary sampling in July 2017, these values were lower than expected. To validate the initial sampling data, we sampled on multiple (4x total) other occasions up through February 2018. Below, I have revised the plot using an average of al four samplings from the 0-10cm control plots. The mean C does rise, but remains somewhat low compared to expectations. I forsee we can easily justify using this slightly higher value, but in that case, it would be appropriate to use the average frome all smapling for the rest of the treatments as well. Moving forward, we should be cognizant of of how these small shift in control C chaneg our intrepration of the results (How much does this shift matter?) 
 
 ```{r fig.width=8, fig.height=6, fig.cap=""}
@@ -107,14 +119,14 @@ ggplot(data.1m, aes(x=TRT, y=bulk_percC, color=Depth)) +
   theme(text = element_text(size=14))
 ```
 
-###Soil C stocks to 1 m
+### Soil C stocks to 1 m
 <div class = "green">
 **To be continued...**
 Soil C% x Bulk density x Depth
 </div>
 
 
-##Fractionated soil C
+## Fractionated soil C
 <style>
 div.red { background-color:#ffe9e6; border-radius: 5px; padding: 10px;}
 </style>
@@ -126,7 +138,7 @@ div.red { background-color:#ffe9e6; border-radius: 5px; padding: 10px;}
 - DNPF 42, No input, 10-20 cm
 </div>
 
-###Heavy Fraction Soil C
+### Heavy Fraction Soil C
 ```{r fig.width=8, fig.height=6, out.width=c('50%', '50%'), fig.show='hold', fig.cap=""}
 #Create data frame with only the fractionated sample data
 data.1f <- data.1 %>% filter(grepl("0-10|10-20", Depth)) %>% filter(Depth != "60-100")
@@ -152,7 +164,7 @@ ggplot(data.1f %>% filter(Depth == "10-20"), aes(x=TRT, y=HF_percC)) +
   ylim(0.2,1.6)
 ```
 
-###Intermediate Fraction Soil C
+### Intermediate Fraction Soil C
 
 ```{r fig.width=8, fig.height=6, out.width=c('50%', '50%'), fig.show='hold', fig.cap=""}
 #Create data frame with only the fractionated sample data
@@ -180,7 +192,7 @@ ggplot(data.1f %>% filter(Depth == "10-20"), aes(x=TRT, y=IF_percC)) +
 ```
 
 
-###Light Fraction Soil C
+### Light Fraction Soil C
 
 ```{r fig.width=8, fig.height=6, out.width=c('50%', '50%'), fig.show='hold', fig.cap=""}
 #Create data frame with only the fractionated sample data
@@ -207,7 +219,7 @@ ggplot(data.1f %>% filter(Depth == "10-20"), aes(x=TRT, y=LF_percC)) +
   ylim(15,35)
 ```
 
-###Fraction mass proportions
+### Fraction mass proportions
 
 
 
