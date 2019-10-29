@@ -2,15 +2,18 @@
 title: "HJA_DIRT20_analysis"
 author: "Derek Pierson"
 date: "February 25, 2019"
-output: 
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
   html_document:
-    code_folding: "hide"
-    toc: true
+    code_folding: hide
+    toc: yes
     toc_depth: 2
     toc_float:
-      collapsed: false
-      smooth_scroll: false
-      number_sections: false
+      collapsed: no
+      number_sections: no
+      smooth_scroll: no
 ---
 
 
@@ -27,9 +30,10 @@ library(knitr)
 ```
 
 # *NEXT STEPS*
-- Convert boxplots to bar graphs with std error bars. (reqs summary stats)
 - Analyze bulk soil C over time
 - Analyze bulk density dataset
+- Soil C stocks
+- Fraction stocks
 - Reproduce plots for N content
 - Stats: Mean comparisons
 - Secondary datasets: N-min, pH, root mass
@@ -43,15 +47,18 @@ This document contains the R analysis and figures for the H.J. Andrews DIRT 20 y
 
 ## Rough Outline For The Paper
 This paper addresses the question: How do detrital source, quantity and quality influence soil C stabilization? (in this case, specific to andic soils in a wet temperate forest dominated by old-growth Douglas fir). The experiment used to answer our research question is the DIRT manipulation at H.J. Andrews. After twenty years of DIRT manipulations, we now present results from the experiment pertaining to the following soil properties:
+
 - Bulk soil C% at 0-10, 10-20, 20-40, 40-60 & 60-100 cm, across treatments (Figure 1)
 - Bulk density at 0-5, 5-10 & 10-15 cm (Figure 2)
 - Bulk soil C as stocks (Figure 3)
 - Soil C fractions (heavy, intermediate and light) at depths 0-10 & 10-20 cm (Figure 4)
+
 - If most relevant to this paper, also FTICR MS of bulk soil C (Figure 5)
 - If insightful, change in bulk soil C at 0-10 cm at year 10, 15 and 20.
 - If insightful, bulk soil N by depth
 - Other soil properties measured: pH, N-mineralization rate (Table), root weight, monthly soil temperature
-\
+
+
 
 ## Datasets
 
@@ -86,20 +93,23 @@ div.green { background-color:	#e6fff6; border-radius: 5px; padding: 10px;}
 
 ```{r fig.width=8, fig.height=6, fig.cap=""}
 ### Plot soil  percent C by treatment & depth
-ggplot(data.1, aes(x=TRT, y=bulk_percC, color=Depth)) + 
-  geom_boxplot(data=data.1, aes(color=Depth)) + 
-  # geom_jitter(data=data.1, aes(size=0.5), width=0.05, height=0.1) +
-  scale_color_brewer(palette="Set1") +
-  scale_fill_brewer(palette="Set1") +
-  ggtitle("HJA DIRT20: Bulk Soil C by Treatment & Depth") +
-  xlab("Treatment Type") + ylab("Bulk Soil C (%)") + labs(color="Depth (cm)") +
-  theme(text = element_text(size=14))
+
+#Summarize data to get mean and std error
+data.1_sumbulkC <- data.1 %>% group_by(.dots=c("TRT", "Depth")) %>% 
+                      summarize(avg=mean(bulk_percC), n=n(), sd=sd(bulk_percC), se=sd/sqrt(n))
+
+ggplot(data.1_sumbulkC, aes(x=Depth, y=avg, group=TRT, fill=TRT)) + theme_bw() +
+    geom_bar(position=position_dodge(), stat="identity", colour="black") +
+    geom_errorbar(aes(ymin=avg-se, ymax=avg+se),width=.4,position=position_dodge(.9), color="grey50") +
+    scale_fill_brewer(palette="Spectral")
 ```
 
 ### Modified C content for 0-10 cm 
-Interpretation of the treatment effects is largely affected by the mean soil C value from the control plots. From the primary sampling in July 2017, these values were lower than expected. To validate the initial sampling data, we sampled on multiple (4x total) other occasions up through February 2018. Below, I have revised the plot using an average of al four samplings from the 0-10cm control plots. The mean C does rise, but remains somewhat low compared to expectations. I forsee we can easily justify using this slightly higher value, but in that case, it would be appropriate to use the average frome all smapling for the rest of the treatments as well. Moving forward, we should be cognizant of of how these small shift in control C chaneg our intrepration of the results (How much does this shift matter?) 
+Interpretation of the treatment effects is largely affected by the mean soil C value from the control plots. From the primary sampling in July 2017, these values were lower than expected. To validate the initial sampling data, we sampled on multiple (4x total) other occasions up through February 2018. Below, I have revised the plot using an average of all four samplings from the 0-10cm control plots. The mean C does rise, but remains somewhat low compared to expectations. I foresee we can easily justify using this slightly higher value, but in that case, it would be appropriate to use the average from all sampling for the rest of the treatments as well. Moving forward, we should be cognizant of how these small shifts in control C change our interpretation of the results (How much does this shift matter to the story?)  
+
 
 ```{r fig.width=8, fig.height=6, fig.cap=""}
+## Plot as bars with std error
 # Create modified dataframe for averaged 0-10 cm control C 
 data.1m <- data.1  
 
@@ -108,17 +118,35 @@ data.1m[8,6] <- 4.836
 data.1m[12,6] <- 6.407 # This value from plot 12 is where we get the boost
 data.1m[14,6] <- 3.66
 
+#save modified data
+write.csv(data.1m, "DIRT20_modified bulk C from R.csv")
+
+#summarize data for bulk C percent
+data.1m_sumbulkC <- data.1m %>% group_by(.dots=c("TRT", "Depth")) %>% 
+                      summarize(avg=mean(bulk_percC), n=n(), sd=sd(bulk_percC), se=sd/sqrt(n))
+
+#save summarized data table
+write.csv(data.1m_sumbulkC, "DIRT20_summarized bulk C from R.csv")
+
 ### Plot soil  percent C by treatment & depth
-ggplot(data.1m, aes(x=TRT, y=bulk_percC, color=Depth)) + 
-  geom_boxplot(data=data.1m, aes(color=Depth)) + 
-  #geom_jitter(data=data.1m, aes(size=0.5), width=0.05, height=0.1) +
-  scale_color_brewer(palette="Set1") +
-  scale_fill_brewer(palette="Set1") +
-  ggtitle("HJA DIRT20: Bulk Soil C by Treatment & Depth") +
-  xlab("Treatment Type") + ylab("Bulk Soil C (%)") + labs(color="Depth (cm)") +
-  theme(text = element_text(size=14))
+library(RColorBrewer)
+ggplot(data.1m_sumbulkC, aes(x=Depth, y=avg, group=TRT, fill=TRT)) + theme_bw() +
+    geom_bar(position=position_dodge(), stat="identity", colour="black") +
+    geom_errorbar(aes(ymin=avg-se, ymax=avg+se),width=.4,position=position_dodge(.9), color="grey50") +
+    scale_fill_brewer(palette="Spectral")
+
+
 ```
 
+
+
+## Bulk soil C over time
+
+
+## Soil Bulk Density
+
+
+## Soil C stocks
 ### Soil C stocks to 1 m
 <div class = "green">
 **To be continued...**
@@ -222,5 +250,24 @@ ggplot(data.1f %>% filter(Depth == "10-20"), aes(x=TRT, y=LF_percC)) +
 ### Fraction mass proportions
 
 
+
+### Compare fraction at 20 years to fractions at 10 years
+
+## O-horizon C
+### O-horizon depth
+### 0-horizon bulk C
+
+## Root weights
+###Root C estimate --> Soil C potential increase magnitude
+
+## Soil pH
+
+## Soil temperature
+
+## Soil nitrogen
+### Soil Total N
+### Soil N-min
+
+## FT-ICR MS
 
 
