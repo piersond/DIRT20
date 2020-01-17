@@ -58,9 +58,11 @@ plot_bd_0_to_10 <- ggplot(mean_bd_to_10cm, aes(x=factor(Trt, levels = trt_order)
   ylab(bquote('Bulk Density (g '*cm^-3~')')) +
   xlab("Treatment") + 
   #ggtitle("Soil Bulk Density, 0-10 cm") +
-  scale_fill_manual(values = c("#eeeeee", "#addd8e","#31a354","#d7301f",
+  scale_fill_manual(labels = c("Control (CTL)", "Double Litter (DL)", "Double Wood (DW)", "No Input (NI)", "No Litter (NL)", "No O-A Horizon (NOA)", "No Root (NR)"),
+                    values = c("#eeeeee", "#addd8e","#31a354","#d7301f",
                                "#fdcc8a", "#b30000","#fc8d59")) + 
-  theme(legend.position = "none") +
+  #theme(legend.position = "none") +
+  theme(legend.title=element_blank()) +
   geom_errorbar(aes(ymin=bulkden_mean-bulkden_stderr, ymax=bulkden_mean+bulkden_stderr), width=.2,position=position_dodge(.9)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
@@ -69,8 +71,8 @@ plot_bd_0_to_10 <- ggplot(mean_bd_to_10cm, aes(x=factor(Trt, levels = trt_order)
 plot_bd_0_to_10
 
 #Figure 3 save
-ggsave(plot=plot_bd_0_to_10, filename = "fig3_Bulk density by treatment_0-10cm.png",
-       width = 6, height = 6 , dpi = 300)
+ggsave(plot=plot_bd_0_to_10, filename = "fig3_Bulk density by treatment_0-10cm.jpeg",
+       width = 9, height = 6 , dpi = 300)
 
 
 

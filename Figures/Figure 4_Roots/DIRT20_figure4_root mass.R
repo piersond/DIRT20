@@ -43,16 +43,18 @@ root_plot <- ggplot(trt_smry, aes(x=factor(Trt, levels = trt_order), y=rootm2, f
   ylab(bquote('Fine root mass (g '*m^-2~')')) +
   xlab("Treatment") + 
   #ggtitle("HJA DIRT 20 YR: Fine Root Mass, 0-10 cm") +
-  scale_fill_manual(values = c("#eeeeee", "#addd8e","#31a354","#d7301f",
+  scale_fill_manual(labels = c("Control (CTL)", "Double Litter (DL)", "Double Wood (DW)", "No Input (NI)", "No Litter (NL)", "No O-A Horizon (NOA)", "No Root (NR)"),
+                    values = c("#eeeeee", "#addd8e","#31a354","#d7301f",
                                "#fdcc8a", "#b30000","#fc8d59")) + 
-  theme(legend.position = "none") +
+  #theme(legend.position = "none") +
+  theme(legend.title=element_blank()) +
   geom_errorbar(aes(ymin=rootm2-rootsterr_m2, ymax=rootm2+rootsterr_m2), width=.2,position=position_dodge(.9)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(text = element_text(size=18))
 root_plot
 
-ggsave(plot=root_plot, filename = "fig4_root mass.png",
-       width = 6, height = 6 , dpi = 300)
+ggsave(plot=root_plot, filename = "fig4_root mass.jpeg",
+       width = 9, height = 6 , dpi = 300)
 
                         

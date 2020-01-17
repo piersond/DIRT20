@@ -51,25 +51,23 @@ names(depth.labs) <- c("0-10", "10-20", "20-40", "40-60", "60-100")
 ### FIGURE 1 - ALL TRTS###
 f1_all <- ggplot(soc_summary, aes(x=factor(TRT, levels = trt_order), y=mean, fill=TRT)) + 
             geom_histogram(stat = "identity", colour="black") + 
-            facet_wrap( ~ Depth, ncol=2, scales = "free", labeller = labeller(Depth = depth.labs)) +
+            #facet_wrap( ~ Depth, ncol=2, scales = "free", labeller = labeller(Depth = depth.labs)) +
             ylim(0,80)+
             theme_minimal() +
             annotate("segment", x=0, xend=Inf, y=0, yend=0) +
             annotate("segment", x=0, xend=-Inf, y=0, yend=Inf) +
-            ylab("Soil Carbon (mg C/g soil)") +
+            ylab(expression("Soil carbon (mg C"~g^{-1}~"soil)")) +
             xlab("") + 
             ggtitle("Detrital treatment effects on soil carbon by depth") +
             theme(panel.spacing = unit(2, "lines")) +
-            scale_fill_manual(values = c("#999999", "#E69F00", "#009E73",
-                                         "#F0E442", "#0072B2", "#D55E00", "#CC79A7")) + 
-            theme(legend.position = "none") +
+            scale_fill_manual(values = c("#eeeeee", "#addd8e","#31a354","#d7301f", "#fdcc8a", "#b30000", "#fc8d59")) + 
             geom_errorbar(aes(ymin=mean-sterr, ymax=mean+sterr), width=.2,position=position_dodge(.9)) +
             theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
             theme(text = element_text(size=18))
 f1_all
                   
-ggsave(plot=f1_all, filename = "fig1_all_trts.png",
-       width = 8, height = 16 , dpi = 300)
+ggsave(plot=f1_all, filename = "fig1_all_trts.jpeg",
+       width = 8, height = 8 , dpi = 300)
 
 
 ### FIGURE 1 - ADTN TRTS###
@@ -78,25 +76,26 @@ adtns_only_data <- soc_summary %>% filter(TRT %in% additions)
 
 f1_adtns <- ggplot(adtns_only_data, aes(x=factor(TRT, levels = trt_order), y=mean, fill=TRT)) + 
   geom_histogram(stat = "identity", colour="black") + 
-  facet_wrap( ~ Depth, ncol=5, scales = "free", labeller = labeller(Depth = depth.labs)) +
+  facet_wrap( ~ Depth, ncol=3, scales = "free", labeller = labeller(Depth = depth.labs)) +
   ylim(0,80)+
   theme_minimal() +
   annotate("segment", x=0, xend=Inf, y=0, yend=0) +
   annotate("segment", x=0, xend=-Inf, y=0, yend=Inf) +
-  ylab("Soil Carbon (mg C/g soil)") +
+  ylab(expression("Soil carbon (mg C"~g^{-1}~"soil)")) +
   xlab("Treatment") + 
+  theme(legend.title=element_blank()) +
   #ggtitle("Detrital treatment effects on soil carbon by depth") +
   theme(panel.spacing = unit(2, "lines")) +
-  scale_fill_manual(values = c("#eeeeee", "#addd8e","#31a354")) + 
-  theme(legend.position = "none") +
+  scale_fill_manual(labels = c("Control (CTL)", "Double Litter (DL)", "Double Wood (DW)"), values = c("#eeeeee", "#addd8e","#31a354")) + 
+  theme(legend.position = "bottom") +
   geom_errorbar(aes(ymin=mean-sterr, ymax=mean+sterr), width=.2,position=position_dodge(.9)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(text = element_text(size=18))
 f1_adtns
 
-ggsave(plot=f1_adtns, filename = "fig1_adtns_trts.png",
-       width = 12, height = 4 , dpi = 300)
+ggsave(plot=f1_adtns, filename = "fig1_adtns_trts.jpeg",
+       width = 9, height = 8 , dpi = 300)
 
 
 ### FIGURE 1 - RMVL TRTS###
@@ -110,16 +109,17 @@ f1_rmvls <- ggplot(rmvl_only_data, aes(x=factor(TRT, levels = trt_order), y=mean
   theme_minimal() +
   annotate("segment", x=0, xend=Inf, y=0, yend=0) +
   annotate("segment", x=0, xend=-Inf, y=0, yend=Inf) +
-  ylab("Soil Carbon (mg C/g soil)") +
-  xlab("Treatment") + 
+  ylab(expression("Soil carbon (mg C"~g^{-1}~"soil)")) +
+  xlab("Treatment") +  
+  theme(legend.title=element_blank()) +
   theme(panel.spacing = unit(2, "lines")) +
-  scale_fill_manual(values = c("#eeeeee", "#d7301f", "#fdcc8a", "#b30000", "#fc8d59")) + 
-  theme(legend.position = "none") +
+  scale_fill_manual(labels = c("Control (CTL)", "No Input (NI)", "No Litter (NL)", "No O-A Horizon (NOA)", "No Root (NR)"),values = c("#eeeeee", "#d7301f", "#fdcc8a", "#b30000", "#fc8d59")) + 
+  theme(legend.position = "bottom") +
   geom_errorbar(aes(ymin=mean-sterr, ymax=mean+sterr), width=.2,position=position_dodge(.9)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(text = element_text(size=18))
 f1_rmvls
 
-ggsave(plot=f1_rmvls, filename = "fig1_rmvls_trts.png",
+ggsave(plot=f1_rmvls, filename = "fig1_rmvls_trts.jpeg",
        width = 9, height = 8 , dpi = 300)
