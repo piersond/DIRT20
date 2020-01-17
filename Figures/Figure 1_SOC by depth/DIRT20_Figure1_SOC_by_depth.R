@@ -110,8 +110,12 @@ f1_rmvls <- ggplot(rmvl_only_data, aes(x=factor(TRT, levels = trt_order), y=mean
   annotate("segment", x=0, xend=Inf, y=0, yend=0) +
   annotate("segment", x=0, xend=-Inf, y=0, yend=Inf) +
   ylab(expression("Soil carbon (mg C"~g^{-1}~"soil)")) +
+<<<<<<< Updated upstream
   xlab("Treatment") +  
   theme(legend.title=element_blank()) +
+=======
+  xlab("Treatment") + 
+>>>>>>> Stashed changes
   theme(panel.spacing = unit(2, "lines")) +
   scale_fill_manual(labels = c("Control (CTL)", "No Input (NI)", "No Litter (NL)", "No O-A Horizon (NOA)", "No Root (NR)"),values = c("#eeeeee", "#d7301f", "#fdcc8a", "#b30000", "#fc8d59")) + 
   theme(legend.position = "bottom") +
